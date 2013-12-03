@@ -13,9 +13,9 @@ public class Field extends JFrame implements ActionListener {
 
     public BufferedImage Buffer = new BufferedImage(Game.FIELDWIDTH,Game.FIELDHEIGHT,BufferedImage.TYPE_INT_ARGB);
     public Vector<FieldObject> FieldObjects = new Vector<FieldObject>();
-    public Snake Snake = new Snake(new Point(10, 300), new Color(50,0,0), 7);
-    public Snake Snake2 = new Snake(new Point(200, 100));
-    public Timer timer = new Timer(16,this);
+    public Snake Snake = new Snake(new Point(0, 320), new Color(50,0,0));
+//    public Snake Snake2 = new Snake(new Point(200, 100));
+    public Timer timer = new Timer(400,this);
 
     public Field(){
         super.setSize(Game.FIELDWIDTH,Game.FIELDHEIGHT);
@@ -23,7 +23,7 @@ public class Field extends JFrame implements ActionListener {
         super.setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         FieldObjects.add(Snake);
-        FieldObjects.add(Snake2);
+//        FieldObjects.add(Snake2);
         FieldObjects.add(new Diamond());
         super.setVisible(true);
         addKeyListener(new MyKeylistener());
@@ -42,9 +42,9 @@ public class Field extends JFrame implements ActionListener {
             o.draw(g2);
         }
         g.drawImage(Buffer, 0, 0, null);
-        if (collide(Snake, Snake2)){
-            finish(g);
-        }
+//        if (collide(Snake, Snake2)){
+//            finish(g);
+//        }
         g.dispose();
     }
 
@@ -68,9 +68,7 @@ public class Field extends JFrame implements ActionListener {
     }
 
     public class MyKeylistener extends KeyAdapter {
-
         public void keyPressed(KeyEvent e) {
-            System.out.println(e.getKeyCode());
             switch (e.getKeyCode()){
                 case VK_RIGHT:
                     Snake.direction = Snake.RIGHT;
@@ -84,18 +82,18 @@ public class Field extends JFrame implements ActionListener {
                 case VK_DOWN:
                     Snake.direction = Snake.DOWN;
                     break;
-                case 87:
-                    Snake2.direction = Snake.UP;
-                    break;
-                case 83:
-                    Snake2.direction = Snake.DOWN;
-                    break;
-                case 65:
-                    Snake2.direction = Snake.LEFT;
-                    break;
-                case 68:
-                    Snake2.direction = Snake.RIGHT;
-                    break;
+//                case 87:
+//                    Snake2.direction = Snake.UP;
+//                    break;
+//                case 83:
+//                    Snake2.direction = Snake.DOWN;
+//                    break;
+//                case 65:
+//                    Snake2.direction = Snake.LEFT;
+//                    break;
+//                case 68:
+//                    Snake2.direction = Snake.RIGHT;
+//                    break;
             }
         }
     }
