@@ -13,16 +13,15 @@ public class Field extends JFrame implements ActionListener {
         Timer timer = new Timer(16,this);
         super.setSize(500,200);
         this.setLocationRelativeTo(getRootPane());
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        super.setDefaultCloseOperation(EXIT_ON_CLOSE);
         super.setVisible(true);
         repaint();
         timer.start();
     }
 
     public void paint(Graphics g){
-        Graphics g2 = Buffer.getGraphics();
-
-        g2.setColor(new Color(255, 255, 255));
+        Graphics2D g2 = Buffer.createGraphics();
+        g2.setBackground(new Color(255,255,255));
         g2.clearRect(0,0,500,500);
         g2.setColor(new Color(15, 75, 100));
         snake.draw(g2);
