@@ -5,17 +5,22 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.util.Vector;
+
+import static java.awt.event.KeyEvent.*;
 
 public class Field extends JFrame implements ActionListener {
 
-    public Snake snake = new Snake();
     public BufferedImage Buffer = new BufferedImage(500,400,BufferedImage.TYPE_INT_ARGB);
+    public Vector<FieldObject> FieldObjects = new Vector<FieldObject>();
+    public Snake Snake = new Snake();
 
     public Field(){
         Timer timer = new Timer(16,this);
         super.setSize(500,400);
         this.setLocationRelativeTo(getRootPane());
         super.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        FieldObjects.add(Snake);
         super.setVisible(true);
         addKeyListener(new MyKeylistener());
         repaint();
@@ -29,7 +34,9 @@ public class Field extends JFrame implements ActionListener {
         g2.setBackground(new Color(255,255,255));
         g2.clearRect(0,0,500,400);
         g2.setColor(new Color(15, 75, 100));
-        snake.draw(g2);
+        for (FieldObject o : FieldObjects) {
+            o.draw(g2);
+        }
         g.drawImage(Buffer, 0, 0, null);
         g.dispose();
     }
@@ -37,15 +44,20 @@ public class Field extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        //System.out.println("Test");
         repaint();
     }
 
     public class MyKeylistener extends KeyAdapter {
 
         public void keyPressed(KeyEvent e) {
-            System.out.println(e.getKeyCode());
-            snake.direction = e.getKeyCode();
+            switch (e.getKeyCode()){
+                case VK_RIGHT:
+                case VK_UP:
+                case VK_LEFT:
+                case VK_DOWN:
+                    Snake.direction = e.getKeyCode();
+                    break;
+            }
         }
     }
 }
