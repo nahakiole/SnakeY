@@ -14,18 +14,19 @@ public class Field extends JFrame implements ActionListener {
     public BufferedImage Buffer = new BufferedImage(Game.FIELDWIDTH,Game.FIELDHEIGHT,BufferedImage.TYPE_INT_ARGB);
     public Vector<FieldObject> FieldObjects = new Vector<FieldObject>();
     public Snake Snake = new Snake(new Point(0, 320), new Color(50,0,0));
-//    public Snake Snake2 = new Snake(new Point(200, 100));
+    public Snake Snake2 = new Snake(new Point(200, 100));
     public Timer timer = new Timer(400,this);
 
     public Field(){
-        super.setSize(Game.FIELDWIDTH,Game.FIELDHEIGHT);
+        setSize(Game.FIELDWIDTH,Game.FIELDHEIGHT);
         this.setLocationRelativeTo(getRootPane());
-        super.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setTitle("Snake 1.0");
         setResizable(false);
         FieldObjects.add(Snake);
-//        FieldObjects.add(Snake2);
+        FieldObjects.add(Snake2);
         FieldObjects.add(new Diamond());
-        super.setVisible(true);
+        setVisible(true);
         addKeyListener(new MyKeylistener());
         repaint();
         timer.start();
@@ -82,18 +83,18 @@ public class Field extends JFrame implements ActionListener {
                 case VK_DOWN:
                     Snake.direction = Snake.DOWN;
                     break;
-//                case 87:
-//                    Snake2.direction = Snake.UP;
-//                    break;
-//                case 83:
-//                    Snake2.direction = Snake.DOWN;
-//                    break;
-//                case 65:
-//                    Snake2.direction = Snake.LEFT;
-//                    break;
-//                case 68:
-//                    Snake2.direction = Snake.RIGHT;
-//                    break;
+                case 87:
+                    Snake2.direction = Snake.UP;
+                    break;
+                case 83:
+                    Snake2.direction = Snake.DOWN;
+                    break;
+                case 65:
+                    Snake2.direction = Snake.LEFT;
+                    break;
+                case 68:
+                    Snake2.direction = Snake.RIGHT;
+                    break;
             }
         }
     }
