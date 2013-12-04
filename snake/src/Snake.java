@@ -30,6 +30,8 @@ public class Snake extends FieldObject {
         speed = mspeed;
     }
 
+
+
     public void addDefaultPoints(Point p){
         Track.add(new Point(p.x,p.y));
         Track.add(new Point(p.x,p.y));
@@ -77,8 +79,24 @@ public class Snake extends FieldObject {
         }
         g.fillRoundRect(Position.x-5,Position.y-5,40,40,35,35);
         g.setColor(new Color(255,255,255));
-        g.fillOval(Position.x+20, Position.y+20, 5,5);
-        g.fillOval(Position.x+20, Position.y, 5,5);
+        switch(direction){
+            case RIGHT:
+                g.fillOval(Position.x+20, Position.y+20, 5,5);
+                g.fillOval(Position.x+20, Position.y, 5,5);
+                break;
+            case UP:
+                g.fillOval(Position.x, Position.y, 5,5);
+                g.fillOval(Position.x+20, Position.y, 5,5);
+                break;
+            case LEFT:
+                g.fillOval(Position.x, Position.y+20, 5,5);
+                g.fillOval(Position.x, Position.y, 5,5);
+                break;
+            case DOWN:
+                g.fillOval(Position.x, Position.y+20, 5,5);
+                g.fillOval(Position.x+20, Position.y+20, 5,5);
+                break;
+        }
         Track.add(new Point(Position.x,Position.y));
 
 //        g.fillRoundRect(Position.x,Position.y,40,40,20,20);
