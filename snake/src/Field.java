@@ -15,11 +15,11 @@ public class Field extends JFrame implements ActionListener {
     public Vector<FieldObject> FieldObjects = new Vector<FieldObject>();
     public Snake Snake = new Snake(new Point(0, 320), new Color(50,0,0));
     public Snake Snake2 = new Snake(new Point(200, 100));
-    public Timer timer = new Timer(400,this);
+    public Timer Timer = new Timer(400,this);
 
     public Field(){
-        setSize(Game.FIELDWIDTH,Game.FIELDHEIGHT);
-        this.setLocationRelativeTo(getRootPane());
+        setSize(Game.FIELDWIDTH, Game.FIELDHEIGHT);
+        setLocationRelativeTo(getRootPane());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Snake 1.0");
         setResizable(false);
@@ -29,7 +29,7 @@ public class Field extends JFrame implements ActionListener {
         setVisible(true);
         addKeyListener(new MyKeylistener());
         repaint();
-        timer.start();
+        Timer.start();
     }
 
 
@@ -54,7 +54,7 @@ public class Field extends JFrame implements ActionListener {
     }
 
     public void finish(Graphics g){
-        timer.stop();
+        Timer.stop();
         g.clearRect(0, 0, Game.FIELDWIDTH, Game.FIELDHEIGHT);
         g.setFont(new Font("Arial", 10, 50));
         g.drawString("Spiel fertig", 150, 200);

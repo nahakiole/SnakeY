@@ -6,6 +6,7 @@ public class Snake extends FieldObject {
     public Vector<Point> Track = new Vector<Point>();
     public Color c = new Color(0,80,0);
     public int speed = 20;
+    public Color Eyes = new Color(71, 119, 255);
 
     public static final int UP = 1;
     public static final int DOWN = 2;
@@ -78,29 +79,33 @@ public class Snake extends FieldObject {
             g.fillRoundRect(p.x,p.y,30,30,10,10);
         }
         g.fillRoundRect(Position.x-5,Position.y-5,40,40,35,35);
-        g.setColor(new Color(255,255,255));
+        g.setColor(new Color(255, 255, 255));
+        Point EyeL = new Point();
+        Point EyeR = new Point();
         switch(direction){
             case RIGHT:
-                g.fillOval(Position.x+20, Position.y+20, 5,5);
-                g.fillOval(Position.x+20, Position.y, 5,5);
+                EyeL.setLocation(Position.x+20, Position.y+20);
+                EyeR.setLocation(Position.x+20, Position.y);
                 break;
             case UP:
-                g.fillOval(Position.x, Position.y, 5,5);
-                g.fillOval(Position.x+20, Position.y, 5,5);
+                EyeL.setLocation(Position.x, Position.y);
+                EyeR.setLocation(Position.x+20, Position.y);
                 break;
             case LEFT:
-                g.fillOval(Position.x, Position.y+20, 5,5);
-                g.fillOval(Position.x, Position.y, 5,5);
+                EyeL.setLocation(Position.x, Position.y+20);
+                EyeR.setLocation(Position.x, Position.y);
                 break;
             case DOWN:
-                g.fillOval(Position.x, Position.y+20, 5,5);
-                g.fillOval(Position.x+20, Position.y+20, 5,5);
+                EyeL.setLocation(Position.x, Position.y+20);
+                EyeR.setLocation(Position.x+20, Position.y+20);
                 break;
         }
+        g.fillOval(EyeR.x,EyeR.y,7,7);
+        g.fillOval(EyeL.x,EyeL.y,7,7);
+        g.setColor(Eyes);
+        g.fillOval(EyeR.x+2,EyeR.y+2,3,3);
+        g.fillOval(EyeL.x+2,EyeL.y+2,3,3);
         Track.add(new Point(Position.x,Position.y));
-
-//        g.fillRoundRect(Position.x,Position.y,40,40,20,20);
         g.setColor(old);
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 }
