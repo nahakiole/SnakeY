@@ -79,7 +79,7 @@ public class Snake extends FieldObject {
             g.fillRoundRect(p.x,p.y,30,30,10,10);
         }
         g.fillRoundRect(Position.x-5,Position.y-5,40,40,35,35);
-        g.setColor(new Color(255, 255, 255));
+        g.setColor(Color.WHITE);
         Point EyeL = new Point();
         Point EyeR = new Point();
         switch(direction){
