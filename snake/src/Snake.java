@@ -1,11 +1,13 @@
 import java.awt.*;
+import java.awt.geom.Area;
 import java.util.Vector;
 
 public class Snake extends FieldObject {
     public int direction = RIGHT;
     public Vector<Point> Track = new Vector<Point>();
     public Color c = new Color(0,80,0);
-    public int speed = 20;
+    public double speed = 4;
+    public int padding = 3;
     public Color Eyes = new Color(71, 119, 255);
 
     public static final int UP = 1;
@@ -14,62 +16,49 @@ public class Snake extends FieldObject {
     public static final int RIGHT = 4;
 
     public Snake(Point p){
-        addDefaultPoints(p);
         Position = p;
+        addDefaultPoints(30);
+
     }
 
     public Snake(Point p, Color cn){
-        addDefaultPoints(p);
         Position = p;
+        addDefaultPoints(30);
+
         c = cn;
     }
 
     public Snake(Point p, Color cn, int mspeed){
-        addDefaultPoints(p);
         Position = p;
+        addDefaultPoints(30);
         c = cn;
         speed = mspeed;
     }
 
 
 
-    public void addDefaultPoints(Point p){
-        Track.add(new Point(p.x,p.y));
-        Track.add(new Point(p.x,p.y));
-        Track.add(new Point(p.x,p.y));
-        Track.add(new Point(p.x,p.y));
-        Track.add(new Point(p.x,p.y));
-        Track.add(new Point(p.x,p.y));
-        Track.add(new Point(p.x,p.y));
+    public void addDefaultPoints(int total){
+        for (Integer i = 0; i<total; i++){
+            Track.add(new Point(Position.x,Position.y));
+        }
     }
+
+
 
     @Override
     public void draw(Graphics g) {
-
-        if (Position.x > Game.FIELDWIDTH){
-            Position.x = -30;
-        }
-        if (Position.y > Game.FIELDHEIGHT){
-            Position.y = -30;
-        }
-        if (Position.x < -30){
-            Position.x = Game.FIELDWIDTH;
-        }
-        if (Position.y < -30){
-            Position.y = Game.FIELDHEIGHT;
-        }
         switch (direction){
             case RIGHT:
-                Position.x = Position.x+speed; //Right
+                Position.x = Position.x+padding; //Right
                 break;
             case UP:
-                Position.y = Position.y-speed; //UP
+                Position.y = Position.y-padding; //UP
                 break;
             case LEFT:
-                Position.x = Position.x-speed; //Left
+                Position.x = Position.x-padding; //Left
                 break;
             case DOWN:
-                Position.y = Position.y+speed; //Up
+                Position.y = Position.y+padding; //Up
                 break;
         }
         Color old = g.getColor();
@@ -107,5 +96,15 @@ public class Snake extends FieldObject {
         g.fillOval(EyeL.x+2,EyeL.y+2,3,3);
         Track.add(new Point(Position.x,Position.y));
         g.setColor(old);
+    }
+
+    @Override
+    public Area getArea() {
+        Area area = new Area();
+        for (Point p: Track){
+            Area tmp = new Area(new Rectangle(p.x,p.y,30,30));
+            area.add(tmp);
+        }
+        return area;
     }
 }
