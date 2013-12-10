@@ -6,7 +6,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.Vector;
 
 import static java.awt.event.KeyEvent.*;
@@ -16,8 +15,8 @@ public class Field extends JFrame implements ActionListener {
     public BufferedImage Buffer = new BufferedImage(Game.FIELDWIDTH, Game.FIELDHEIGHT, BufferedImage.TYPE_INT_ARGB);
     public Vector<FieldObject> FieldObjects = new Vector<FieldObject>();
     public Vector<Diamond> Diamonds = new Vector<Diamond>();
-    public Snake Snake = new Snake(new Point(0, 320), new Color(50, 0, 0));
-    //    public Snake Snake2 = new Snake(new Point(200, 100));
+    public Snake Snake1 = new Snake(new Point(100, 320), new Color(50, 0, 0));
+    //    public Snake1 Snake2 = new Snake1(new Point(200, 100));
     public Timer Timer = new Timer(16, this);
     public int Points = 0;
 
@@ -25,20 +24,24 @@ public class Field extends JFrame implements ActionListener {
         setSize(Game.FIELDWIDTH, Game.FIELDHEIGHT);
         setLocationRelativeTo(getRootPane());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("Snake 1.0");
+        setTitle("Snake1 1.0");
         setResizable(false);
-        FieldObjects.add(Snake);
+        FieldObjects.add(Snake1);
 //        FieldObjects.add(Snake2);
-        Diamond diamond1 = new Diamond(new Point(40, 60));
-        Diamond diamond2 = new Diamond(new Point(100, 200));
-        FieldObjects.add(diamond1);
-        Diamonds.add(diamond1);
-        FieldObjects.add(diamond2);
-        Diamonds.add(diamond2);
+        addDiamond(new Point(100, 200), 10);
+        addDiamond(new Point(200, 200), 30);
+        addDiamond(new Point(400, 100), 30);
+        addDiamond(new Point(150, 100), 30);
         setVisible(true);
         addKeyListener(new MyKeylistener());
         repaint();
         Timer.start();
+    }
+
+    public void addDiamond(Point p, Integer points) {
+        Diamond diamond = new Diamond(p, points);
+        FieldObjects.add(diamond);
+        Diamonds.add(diamond);
     }
 
     public void paint(Graphics g) {
@@ -47,10 +50,10 @@ public class Field extends JFrame implements ActionListener {
         g2.clearRect(0, 0, Game.FIELDWIDTH, Game.FIELDHEIGHT);
         g2.setColor(new Color(15, 75, 100));
 
-        if (Snake.Position.x > Game.FIELDWIDTH-40
-         || Snake.Position.y > Game.FIELDHEIGHT-40
-         || Snake.Position.x < 0
-         || Snake.Position.y < 0) {
+        if (Snake1.Position.x > Game.FIELDWIDTH - 40
+                || Snake1.Position.y > Game.FIELDHEIGHT - 40
+                || Snake1.Position.x < 10
+                || Snake1.Position.y < 30) {
             finish(g);
         }
 
@@ -58,23 +61,47 @@ public class Field extends JFrame implements ActionListener {
             o.draw(g2);
         }
 
-        for (int i=0;i<Diamonds.size();i++) {
+        for (int i = 0; i < Diamonds.size(); i++) {
             Diamond d = Diamonds.get(i);
-            if (collide(Snake.getArea(), d.getArea())) {
-                Points += 10;
-                Snake.addDefaultPoints(20);
+            if (collide(Snake1.getArea(), d.getArea())) {
+                Points += d.points;
+                Snake1.addDefaultPoints(d.points);
                 Diamonds.remove(d);
                 FieldObjects.remove(d);
             }
         }
 
-        g2.drawString("Punkte " + Points, 20, 50
-        );
+        Point head = new Point(Snake1.Position.x + 20, Snake1.Position.y + 20);
+        Point direction = new Point(1, 30);
+        g2.setColor(Color.GREEN);
+        switch (Snake1.direction) {
+            case Snake.RIGHT:
+                head = new Point(Snake1.Position.x + 35, Snake1.Position.y);
+                break;
+            case Snake.UP:
+                head = new Point(Snake1.Position.x, Snake1.Position.y - 5);
+                direction = new Point(30, 1);
+                break;
+            case Snake.LEFT:
+                head = new Point(Snake1.Position.x - 5, Snake1.Position.y);
+                break;
+            case Snake.DOWN:
+                head = new Point(Snake1.Position.x, Snake1.Position.y + 35);
+                direction = new Point(30, 1);
+                break;
+        }
+        if (collide(Snake1.getArea(), new Area(new Rectangle(head.x, head.y, direction.x, direction.y)))) {
+            finish(g2);
+        }
+
+
+        g2.setColor(Color.black);
+
+        g2.setFont(new Font("Arial", 10, 18));
+        g2.drawString("Punkte " + Points, 15, 50);
 
         g.drawImage(Buffer, 0, 0, null);
-//        if (collide(Snake.getArea(), Snake2.getArea())) {
-//            finish(g);
-//        }
+
         g.dispose();
     }
 
@@ -98,11 +125,13 @@ public class Field extends JFrame implements ActionListener {
 
     public void finish(Graphics g) {
         Timer.stop();
-//        g.clearRect(0, 0, Game.FIELDWIDTH, Game.FIELDHEIGHT);
-//        g.setFont(new Font("Arial", 10, 50));
-//        g.drawString("Spiel fertig", 150, 200);
-//        g.dispose();
-//        System.out.println("Fertig");
+        g.setFont(new Font("Arial", 10, 50));
+        g.setColor(Color.black);
+        g.drawString("Game over", 150, 200);
+        g.setFont(new Font("Arial", 10, 40));
+        g.drawString(Points+" Punkte", 190, 250);
+        g.dispose();
+        System.out.println("Game Over");
     }
 
 
@@ -115,28 +144,36 @@ public class Field extends JFrame implements ActionListener {
         public void keyPressed(KeyEvent e) {
             switch (e.getKeyCode()) {
                 case VK_RIGHT:
-                    Snake.direction = Snake.RIGHT;
+                    if (Snake1.direction != Snake.LEFT) {
+                        Snake1.direction = Snake1.RIGHT;
+                    }
                     break;
                 case VK_UP:
-                    Snake.direction = Snake.UP;
+                    if (Snake1.direction != Snake.DOWN) {
+                        Snake1.direction = Snake1.UP;
+                    }
                     break;
                 case VK_LEFT:
-                    Snake.direction = Snake.LEFT;
+                    if (Snake1.direction != Snake.RIGHT) {
+                        Snake1.direction = Snake1.LEFT;
+                    }
                     break;
                 case VK_DOWN:
-                    Snake.direction = Snake.DOWN;
+                    if (Snake1.direction != Snake.UP) {
+                        Snake1.direction = Snake1.DOWN;
+                    }
                     break;
 //                case 87:
-//                    Snake2.direction = Snake.UP;
+//                    Snake2.direction = Snake1.UP;
 //                    break;
 //                case 83:
-//                    Snake2.direction = Snake.DOWN;
+//                    Snake2.direction = Snake1.DOWN;
 //                    break;
 //                case 65:
-//                    Snake2.direction = Snake.LEFT;
+//                    Snake2.direction = Snake1.LEFT;
 //                    break;
 //                case 68:
-//                    Snake2.direction = Snake.RIGHT;
+//                    Snake2.direction = Snake1.RIGHT;
 //                    break;
             }
         }
