@@ -7,7 +7,7 @@ public class Snake extends FieldObject {
     public Vector<Point> Track = new Vector<Point>();
     public Color c = new Color(0,80,0);
     public double speed = 4;
-    public int padding = 3;
+    public int padding = 10;
     public Color Eyes = new Color(71, 119, 255);
 
     public static final int UP = 1;
@@ -67,6 +67,7 @@ public class Snake extends FieldObject {
         for (Point p: Track){
             g.fillRoundRect(p.x,p.y,30,30,10,10);
         }
+        g.setColor(c.brighter());
         g.fillRoundRect(Position.x-5,Position.y-5,40,40,35,35);
         g.setColor(Color.WHITE);
         Point EyeL = new Point();

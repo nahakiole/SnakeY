@@ -19,26 +19,27 @@ public class Field extends JFrame implements ActionListener {
     //    public Snake1 Snake2 = new Snake1(new Point(200, 100));
     public Timer Timer = new Timer(16, this);
     public int Points = 0;
+    public boolean Pause = false;
 
     public Field() {
         setSize(Game.FIELDWIDTH, Game.FIELDHEIGHT);
         setLocationRelativeTo(getRootPane());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("Snake1 1.0");
+        setTitle("Snake 1.0");
         setResizable(false);
         FieldObjects.add(Snake1);
 //        FieldObjects.add(Snake2);
-        addDiamond(new Point(100, 200), 10);
-        addDiamond(new Point(200, 200), 30);
-        addDiamond(new Point(400, 100), 30);
-        addDiamond(new Point(150, 100), 30);
+        addDiamond();
+        addDiamond();
+        addDiamond();
         setVisible(true);
         addKeyListener(new MyKeylistener());
-        repaint();
         Timer.start();
     }
 
-    public void addDiamond(Point p, Integer points) {
+    public void addDiamond() {
+        Point p = new Point((int) (Math.random()*(Game.FIELDWIDTH-30)+10), (int) (Math.random()*(Game.FIELDHEIGHT-30)+10));
+        int points = (int) (Math.random()*100+50);
         Diamond diamond = new Diamond(p, points);
         FieldObjects.add(diamond);
         Diamonds.add(diamond);
@@ -68,6 +69,7 @@ public class Field extends JFrame implements ActionListener {
                 Snake1.addDefaultPoints(d.points);
                 Diamonds.remove(d);
                 FieldObjects.remove(d);
+                addDiamond();
             }
         }
 
@@ -93,40 +95,36 @@ public class Field extends JFrame implements ActionListener {
         if (collide(Snake1.getArea(), new Area(new Rectangle(head.x, head.y, direction.x, direction.y)))) {
             finish(g2);
         }
-
-
         g2.setColor(Color.black);
-
         g2.setFont(new Font("Arial", 10, 18));
         g2.drawString("Punkte " + Points, 15, 50);
-
+        if (Pause){
+            g2.setFont(new Font("Arial", 10, 30));
+            g2.drawString("Pause ", 250, 200);
+        }
         g.drawImage(Buffer, 0, 0, null);
-
         g.dispose();
     }
 
     public boolean collide(Area area1, Area area2) {
         boolean collide = false;
-
         Area collide1 = new Area(area1);
         collide1.subtract(area2);
         if (!collide1.equals(area1)) {
             collide = true;
         }
-
         Area collide2 = new Area(area2);
         collide2.subtract(area1);
         if (!collide2.equals(area2)) {
             collide = true;
         }
-
         return collide;
     }
 
     public void finish(Graphics g) {
         Timer.stop();
         g.setFont(new Font("Arial", 10, 50));
-        g.setColor(Color.black);
+        g.setColor(Color.RED);
         g.drawString("Game over", 150, 200);
         g.setFont(new Font("Arial", 10, 40));
         g.drawString(Points+" Punkte", 190, 250);
@@ -143,6 +141,17 @@ public class Field extends JFrame implements ActionListener {
     public class MyKeylistener extends KeyAdapter {
         public void keyPressed(KeyEvent e) {
             switch (e.getKeyCode()) {
+                case VK_P:
+                    if (Timer.isRunning()){
+                        Timer.stop();
+                        Pause = true;
+                        repaint();
+                    }
+                    else {
+                        Timer.start();
+                        Pause = false;
+                    }
+                    break;
                 case VK_RIGHT:
                     if (Snake1.direction != Snake.LEFT) {
                         Snake1.direction = Snake1.RIGHT;
