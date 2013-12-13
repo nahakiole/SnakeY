@@ -7,7 +7,7 @@ public class Snake extends FieldObject {
     public Vector<Point> Track = new Vector<Point>();
     public Color c = new Color(0,80,0);
     public double speed = 4;
-    public int padding = 10;
+    public int padding = 2;
     public Color Eyes = new Color(71, 119, 255);
 
     public static final int UP = 1;

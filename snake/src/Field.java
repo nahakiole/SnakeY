@@ -38,8 +38,8 @@ public class Field extends JFrame implements ActionListener {
     }
 
     public void addDiamond() {
-        Point p = new Point((int) (Math.random()*(Game.FIELDWIDTH-30)+10), (int) (Math.random()*(Game.FIELDHEIGHT-30)+10));
-        int points = (int) (Math.random()*100+50);
+        Point p = new Point((int) (Math.random() * (Game.FIELDWIDTH - 40) + 10), (int) (Math.random() * (Game.FIELDHEIGHT - 30) + 10));
+        int points = (int) (Math.random() * 20 + 30);
         Diamond diamond = new Diamond(p, points);
         FieldObjects.add(diamond);
         Diamonds.add(diamond);
@@ -55,7 +55,7 @@ public class Field extends JFrame implements ActionListener {
                 || Snake1.Position.y > Game.FIELDHEIGHT - 40
                 || Snake1.Position.x < 10
                 || Snake1.Position.y < 30) {
-            finish(g);
+            finish(g, false);
         }
 
         for (FieldObject o : FieldObjects) {
@@ -69,7 +69,6 @@ public class Field extends JFrame implements ActionListener {
                 Snake1.addDefaultPoints(d.points);
                 Diamonds.remove(d);
                 FieldObjects.remove(d);
-                addDiamond();
             }
         }
 
@@ -93,16 +92,21 @@ public class Field extends JFrame implements ActionListener {
                 break;
         }
         if (collide(Snake1.getArea(), new Area(new Rectangle(head.x, head.y, direction.x, direction.y)))) {
-            finish(g2);
+            finish(g2, false);
         }
         g2.setColor(Color.black);
         g2.setFont(new Font("Arial", 10, 18));
         g2.drawString("Punkte " + Points, 15, 50);
-        if (Pause){
+        if (Pause) {
             g2.setFont(new Font("Arial", 10, 30));
             g2.drawString("Pause ", 250, 200);
         }
         g.drawImage(Buffer, 0, 0, null);
+
+        if (Diamonds.size() == 0) {
+            g.clearRect(0, 0, Game.FIELDWIDTH, Game.FIELDHEIGHT);
+            finish(g, true);
+        }
         g.dispose();
     }
 
@@ -121,13 +125,19 @@ public class Field extends JFrame implements ActionListener {
         return collide;
     }
 
-    public void finish(Graphics g) {
+    public void finish(Graphics g, Boolean won) {
         Timer.stop();
         g.setFont(new Font("Arial", 10, 50));
-        g.setColor(Color.RED);
-        g.drawString("Game over", 150, 200);
+
+        if (won) {
+            g.setColor(Color.GREEN);
+            g.drawString("You won the Game", 100, 200);
+        } else {
+            g.setColor(Color.RED);
+            g.drawString("Game Over", 150, 200);
+        }
         g.setFont(new Font("Arial", 10, 40));
-        g.drawString(Points+" Punkte", 190, 250);
+        g.drawString(Points + " Punkte", 190, 250);
         g.dispose();
         System.out.println("Game Over");
     }
@@ -142,12 +152,11 @@ public class Field extends JFrame implements ActionListener {
         public void keyPressed(KeyEvent e) {
             switch (e.getKeyCode()) {
                 case VK_P:
-                    if (Timer.isRunning()){
+                    if (Timer.isRunning()) {
                         Timer.stop();
                         Pause = true;
                         repaint();
-                    }
-                    else {
+                    } else {
                         Timer.start();
                         Pause = false;
                     }
