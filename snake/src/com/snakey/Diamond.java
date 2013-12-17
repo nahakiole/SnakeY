@@ -1,4 +1,4 @@
-import javafx.geometry.Pos;
+package com.snakey;
 
 import java.awt.*;
 import java.awt.geom.Area;

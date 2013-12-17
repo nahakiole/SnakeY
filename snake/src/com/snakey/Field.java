@@ -1,3 +1,5 @@
+package com.snakey;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -25,7 +27,7 @@ public class Field extends JFrame implements ActionListener {
         setSize(Game.FIELDWIDTH, Game.FIELDHEIGHT);
         setLocationRelativeTo(getRootPane());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("Snake 1.0");
+        setTitle("com.snakey.Snake 1.0");
         setResizable(false);
         FieldObjects.add(Snake1);
 //        FieldObjects.add(Snake2);
@@ -134,12 +136,12 @@ public class Field extends JFrame implements ActionListener {
             g.drawString("You won the Game", 100, 200);
         } else {
             g.setColor(Color.RED);
-            g.drawString("Game Over", 150, 200);
+            g.drawString("com.snakey.Game Over", 150, 200);
         }
         g.setFont(new Font("Arial", 10, 40));
         g.drawString(Points + " Punkte", 190, 250);
         g.dispose();
-        System.out.println("Game Over");
+        System.out.println("com.snakey.Game Over");
     }
 
 

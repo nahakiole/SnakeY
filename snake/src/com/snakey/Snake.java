@@ -1,3 +1,5 @@
+package com.snakey;
+
 import java.awt.*;
 import java.awt.geom.Area;
 import java.util.Vector;
@@ -64,9 +66,18 @@ public class Snake extends FieldObject {
         Color old = g.getColor();
         g.setColor(c);
         Track.remove(0);
+        Polygon poly = new Polygon();
         for (Point p: Track){
-            g.fillRoundRect(p.x,p.y,30,30,10,10);
+            poly.addPoint(p.x,p.y);
+//            g.fillRoundRect(p.x,p.y,30,30,10,10);
         }
+        poly.addPoint(Track.get(Track.size()-1).x-30,Track.get(Track.size()-1).y-30);
+        for (int i = Track.size()-1; i > 1; i--){
+            System.out.println(i);
+            poly.addPoint(Track.get(i).x+30,Track.get(i).y+30);
+//            g.fillRoundRect(p.x,p.y,30,30,10,10);
+        }
+        g.fillPolygon(poly);
         g.setColor(c.brighter());
         g.fillRoundRect(Position.x-5,Position.y-5,40,40,35,35);
         g.setColor(Color.WHITE);
