@@ -3,6 +3,10 @@ package com.snakey;
 import java.awt.*;
 import java.awt.geom.Area;
 
+/**
+ * @author Robin Glauser
+ * @version 1.0
+ */
 public class Diamond extends FieldObject {
 
     public Integer points;

@@ -8,18 +8,23 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
+import java.util.Date;
 import java.util.Vector;
 
 import static java.awt.event.KeyEvent.*;
 
-public class Field extends JFrame implements ActionListener {
+/**
+ * @author Robin Glauser
+ * @version 1.0
+ */
+public class Field extends JFrame {
 
     public BufferedImage Buffer = new BufferedImage(Game.FIELDWIDTH, Game.FIELDHEIGHT, BufferedImage.TYPE_INT_ARGB);
     public Vector<FieldObject> FieldObjects = new Vector<FieldObject>();
     public Vector<Diamond> Diamonds = new Vector<Diamond>();
-    public Snake Snake1 = new Snake(new Point(100, 320), new Color(50, 0, 0));
+    public Snake Snake1;
+    public Render Render;
     //    public Snake1 Snake2 = new Snake1(new Point(200, 100));
-    public Timer Timer = new Timer(16, this);
     public int Points = 0;
     public boolean Pause = false;
 
@@ -27,22 +32,24 @@ public class Field extends JFrame implements ActionListener {
         setSize(Game.FIELDWIDTH, Game.FIELDHEIGHT);
         setLocationRelativeTo(getRootPane());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("com.snakey.Snake 1.0");
+        setTitle("Snake 4.0");
         setResizable(false);
+        Render = new Render(this);
+        Snake1 = new Snake( new Point(100, 320), new Color(50, 0, 0));
         FieldObjects.add(Snake1);
-//        FieldObjects.add(Snake2);
         addDiamond();
         addDiamond();
         addDiamond();
         setVisible(true);
         addKeyListener(new MyKeylistener());
-        Timer.start();
+        Render.start();
+
     }
 
     public void addDiamond() {
         Point p = new Point((int) (Math.random() * (Game.FIELDWIDTH - 40) + 10), (int) (Math.random() * (Game.FIELDHEIGHT - 30) + 10));
         int points = (int) (Math.random() * 20 + 30);
-        Diamond diamond = new Diamond(p, points);
+        Diamond diamond = new Diamond( p, points);
         FieldObjects.add(diamond);
         Diamonds.add(diamond);
     }
@@ -71,28 +78,15 @@ public class Field extends JFrame implements ActionListener {
                 Snake1.addDefaultPoints(d.points);
                 Diamonds.remove(d);
                 FieldObjects.remove(d);
+                if (Points < 1000) {
+                    addDiamond();
+                }
             }
         }
 
         Point head = new Point(Snake1.Position.x + 20, Snake1.Position.y + 20);
         Point direction = new Point(1, 30);
         g2.setColor(Color.GREEN);
-        switch (Snake1.direction) {
-            case Snake.RIGHT:
-                head = new Point(Snake1.Position.x + 35, Snake1.Position.y);
-                break;
-            case Snake.UP:
-                head = new Point(Snake1.Position.x, Snake1.Position.y - 5);
-                direction = new Point(30, 1);
-                break;
-            case Snake.LEFT:
-                head = new Point(Snake1.Position.x - 5, Snake1.Position.y);
-                break;
-            case Snake.DOWN:
-                head = new Point(Snake1.Position.x, Snake1.Position.y + 35);
-                direction = new Point(30, 1);
-                break;
-        }
         if (collide(Snake1.getArea(), new Area(new Rectangle(head.x, head.y, direction.x, direction.y)))) {
             finish(g2, false);
         }
@@ -128,7 +122,10 @@ public class Field extends JFrame implements ActionListener {
     }
 
     public void finish(Graphics g, Boolean won) {
-        Timer.stop();
+        Snake1.die();
+
+        setTitle("Snake 4.0: You Won");
+
         g.setFont(new Font("Arial", 10, 50));
 
         if (won) {
@@ -136,32 +133,20 @@ public class Field extends JFrame implements ActionListener {
             g.drawString("You won the Game", 100, 200);
         } else {
             g.setColor(Color.RED);
-            g.drawString("com.snakey.Game Over", 150, 200);
+            g.drawString("Game Over", 150, 200);
         }
         g.setFont(new Font("Arial", 10, 40));
         g.drawString(Points + " Punkte", 190, 250);
         g.dispose();
-        System.out.println("com.snakey.Game Over");
+        Render.stop();
     }
 
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        repaint();
-    }
 
     public class MyKeylistener extends KeyAdapter {
         public void keyPressed(KeyEvent e) {
             switch (e.getKeyCode()) {
                 case VK_P:
-                    if (Timer.isRunning()) {
-                        Timer.stop();
-                        Pause = true;
-                        repaint();
-                    } else {
-                        Timer.start();
-                        Pause = false;
-                    }
+                    Pause = !Pause;
                     break;
                 case VK_RIGHT:
                     if (Snake1.direction != Snake.LEFT) {
